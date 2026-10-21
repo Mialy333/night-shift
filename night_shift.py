@@ -38,6 +38,9 @@ You read one day of git activity and write a very short morning note. Rules:
 - Be brief. Respect every word limit below. Short words, no filler.
 - Plain, warm English, first person ("I"). No hype, no emojis.
 - The notes may be in French: always translate them and write the whole note in English.
+- The notes may be grouped under headings like "## build", "## learning", "## career".
+  Use only the commits and the build notes for "In two lines", the build journal and the post idea.
+  Use the other notes (learning, career, anything else) only for "Off the keyboard".
 
 Output exactly this markdown:
 ## In two lines
@@ -51,6 +54,9 @@ Output exactly this markdown:
 
 ## One post idea
 <max 15 words: one concrete angle for a short post>
+
+## Off the keyboard
+<max 15 words: one gentle reminder from the non-build notes, or "Nothing noted.">
 """
 
 
