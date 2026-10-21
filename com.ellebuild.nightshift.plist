@@ -8,14 +8,14 @@
   <key>ProgramArguments</key>
   <array>
     <string>/usr/bin/python3</string>
-    <string>/Users/mialyratsimbazafy/night-shift/night_shift.py</string>
+    <string>/Users/mialyratsimbazafy/HACKTOBERFEST2026/night-shift/night_shift.py</string>
   </array>
 
   <key>EnvironmentVariables</key>
   <dict>
     <!-- colon-separated list of the repos you work in this week -->
     <key>NIGHT_SHIFT_REPOS</key>
-    <string>/Users/mialyratsimbazafy/night-shift</string>
+    <string>/Users/mialyratsimbazafy/HACKTOBERFEST2026/night-shift</string>
     <key>NIGHT_SHIFT_MODEL</key>
     <string>gemma4:e2b</string>
     <key>PATH</key>

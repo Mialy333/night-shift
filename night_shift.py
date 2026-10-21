@@ -5,8 +5,8 @@ Stdlib only. Runs fully offline against a local Ollama server.
 Config via environment variables:
   NIGHT_SHIFT_REPOS   colon-separated list of repo paths (required)
   NIGHT_SHIFT_MODEL   Ollama model name (default: gemma3:4b)
-  NIGHT_SHIFT_OUT     output folder (default: ~/night-shift/morning)
-  NIGHT_SHIFT_NOTES   optional free-form notes file (default: ~/night-shift/notes.md)
+  NIGHT_SHIFT_OUT     output folder (default: <script folder>/morning)
+  NIGHT_SHIFT_NOTES   optional free-form notes file (default: <script folder>/notes.md)
   NIGHT_SHIFT_SINCE   git --since value (default: "24 hours ago")
 """
 
@@ -20,8 +20,8 @@ from pathlib import Path
 
 OLLAMA_URL = "http://localhost:11434/api/chat"
 MODEL = os.environ.get("NIGHT_SHIFT_MODEL", "gemma3:4b")
-OUT_DIR = Path(os.environ.get("NIGHT_SHIFT_OUT", "~/night-shift/morning")).expanduser()
-NOTES = Path(os.environ.get("NIGHT_SHIFT_NOTES", "~/night-shift/notes.md")).expanduser()
+OUT_DIR = Path(os.environ.get("NIGHT_SHIFT_OUT", str(Path(__file__).resolve().parent / "morning"))).expanduser()
+NOTES = Path(os.environ.get("NIGHT_SHIFT_NOTES", str(Path(__file__).resolve().parent / "notes.md"))).expanduser()
 SINCE = os.environ.get("NIGHT_SHIFT_SINCE", "24 hours ago")
 MAX_CHARS = 8000  # keep the prompt small enough for a 4B model
 
