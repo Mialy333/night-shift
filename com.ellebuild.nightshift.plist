@@ -17,7 +17,7 @@
     <key>NIGHT_SHIFT_REPOS</key>
     <string>/Users/YOUR_USER/Documents/PythonProjects/night-shift</string>
     <key>NIGHT_SHIFT_MODEL</key>
-    <string>gemma3:4b</string>
+    <string>gemma4:e2b</string>
     <key>PATH</key>
     <string>/opt/homebrew/bin:/usr/bin:/bin</string>
   </dict>
