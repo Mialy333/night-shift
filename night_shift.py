@@ -126,11 +126,46 @@ def block_html(lines: list[str]) -> str:
         for b in bullets:
             label, sep, rest = b.partition(":")
             if sep and len(label) < 30:
-                items.append(f'<li><span class="tag">{inline(label)}</span>{inline(rest.strip())}</li>')
+                key = label.strip().lower()
+                tone = "ok" if key.startswith("done") else "bad" if key.startswith("broke") else "ask" if key.startswith("open") else ""
+                items.append(f'<li><span class="tag {tone}">{inline(label)}</span>{inline(rest.strip())}</li>')
             else:
                 items.append(f"<li>{inline(b)}</li>")
         return f"<ul>{''.join(items)}</ul>"
     return "".join(f"<p>{inline(l.lstrip('- '))}</p>" for l in lines)
+
+
+SLOTH = """<figure class="sloth" aria-label="A sleeping sloth hanging from a branch">
+<svg viewBox="0 0 300 270" xmlns="http://www.w3.org/2000/svg">
+  <path d="M8 38 Q150 22 292 34" stroke="#6b4f3a" stroke-width="11" stroke-linecap="round" fill="none"/>
+  <ellipse cx="40" cy="28" rx="14" ry="6" fill="#34d399" opacity=".75" transform="rotate(-25 40 28)"/>
+  <ellipse cx="262" cy="24" rx="14" ry="6" fill="#34d399" opacity=".75" transform="rotate(20 262 24)"/>
+  <ellipse cx="236" cy="22" rx="10" ry="4.5" fill="#22d3ee" opacity=".55" transform="rotate(-15 236 22)"/>
+  <g class="swing">
+    <path d="M112 38 L118 118" stroke="#8b6f5a" stroke-width="20" stroke-linecap="round"/>
+    <path d="M188 36 L182 118" stroke="#8b6f5a" stroke-width="20" stroke-linecap="round"/>
+    <path d="M104 34 q4 -10 10 -2 M112 33 q4 -10 10 -2" stroke="#f5e6d6" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M180 32 q4 -10 10 -2 M188 31 q4 -10 10 -2" stroke="#f5e6d6" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <ellipse cx="150" cy="168" rx="72" ry="64" fill="#8b6f5a"/>
+    <ellipse cx="150" cy="178" rx="44" ry="40" fill="#a3866f"/>
+    <ellipse cx="116" cy="222" rx="18" ry="13" fill="#7a604d"/>
+    <ellipse cx="184" cy="222" rx="18" ry="13" fill="#7a604d"/>
+    <circle cx="150" cy="128" r="48" fill="#9c7d66"/>
+    <ellipse cx="150" cy="136" rx="38" ry="30" fill="#ead8c3"/>
+    <ellipse cx="131" cy="131" rx="14" ry="8" fill="#4a3628" transform="rotate(-18 131 131)"/>
+    <ellipse cx="169" cy="131" rx="14" ry="8" fill="#4a3628" transform="rotate(18 169 131)"/>
+    <path d="M124 131 q6 5 12 0 M164 131 q6 5 12 0" stroke="#f5e6d6" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <ellipse cx="150" cy="144" rx="7" ry="4.5" fill="#3a2a1f"/>
+    <path d="M140 153 Q150 161 160 153" stroke="#3a2a1f" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <circle cx="124" cy="146" r="5" fill="#f9a8d4" opacity=".55"/>
+    <circle cx="176" cy="146" r="5" fill="#f9a8d4" opacity=".55"/>
+  </g>
+  <text class="z z1" x="206" y="104">z</text>
+  <text class="z z2" x="218" y="88">z</text>
+  <text class="z z3" x="230" y="70">Z</text>
+</svg>
+<figcaption>Working slowly so you don't have to.</figcaption>
+</figure>"""
 
 
 def render_card(body: str, day: date) -> str:
@@ -152,6 +187,7 @@ def render_card(body: str, day: date) -> str:
   --glass: rgba(255,255,255,.06); --line: rgba(255,255,255,.12);
 }}
 * {{ box-sizing: border-box; margin: 0; }}
+html {{ background: var(--bg); }}
 body {{
   min-height: 100vh; color: var(--ink); padding: 48px 16px;
   font: 16px/1.6 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, sans-serif;
@@ -159,8 +195,7 @@ body {{
     radial-gradient(900px 600px at 85% -10%, rgba(168,85,247,.35), transparent 60%),
     radial-gradient(700px 500px at -10% 110%, rgba(59,130,246,.30), transparent 60%),
     linear-gradient(160deg, #120d33 0%, var(--bg) 55%, #1a0f3d 100%);
-  background-attachment: fixed;
-}}
+  }}
 main {{ max-width: 880px; margin: 0 auto; position: relative; }}
 .orb {{
   position: absolute; right: -10px; top: -20px; width: 120px; height: 120px; border-radius: 50%;
@@ -192,7 +227,7 @@ main {{ max-width: 880px; margin: 0 auto; position: relative; }}
   background: linear-gradient(90deg, #fff, #d8c7ff 45%, #9ec5ff); -webkit-background-clip: text;
   background-clip: text; color: transparent; position: relative; z-index: 1;
 }}
-.grid {{ display: grid; grid-template-columns: 1.4fr 1fr; gap: 20px; }}
+.grid {{ display: grid; grid-template-columns: 1.4fr 1fr; gap: 20px; align-items: start; }}
 .card {{ padding: 24px 24px 26px; position: relative; }}
 .card::before {{
   content: ""; position: absolute; left: 24px; top: 0; width: 56px; height: 3px; border-radius: 0 0 4px 4px;
@@ -208,6 +243,18 @@ li {{ padding: 12px 14px; border-radius: 14px; background: rgba(255,255,255,.04)
   display: inline-block; margin-right: 8px; padding: 2px 10px; border-radius: 999px; font-size: 12px; font-weight: 600;
   background: linear-gradient(90deg, rgba(168,85,247,.35), rgba(59,130,246,.35)); color: #f3eeff;
 }}
+.tag.ok  {{ background: rgba(52,211,153,.18); color: #6ee7b7; box-shadow: inset 0 0 0 1px rgba(52,211,153,.45); }}
+.tag.bad {{ background: rgba(248,113,113,.18); color: #fca5a5; box-shadow: inset 0 0 0 1px rgba(248,113,113,.45); }}
+.tag.ask {{ background: rgba(250,204,21,.16); color: #fde68a; box-shadow: inset 0 0 0 1px rgba(250,204,21,.45); }}
+.sloth {{ display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 240px; }}
+.sloth svg {{ width: 100%; max-width: 320px; overflow: visible; filter: drop-shadow(0 18px 40px rgba(168,85,247,.35)); }}
+.sloth .swing {{ transform-origin: 150px 34px; animation: swing 7s ease-in-out infinite; }}
+.sloth .z {{ fill: var(--muted); font: 600 18px ui-rounded, system-ui, sans-serif; animation: float 4s ease-in-out infinite; opacity: 0; }}
+.sloth .z2 {{ animation-delay: 1.3s; }} .sloth .z3 {{ animation-delay: 2.6s; }}
+.sloth figcaption {{ color: var(--muted); font-size: 14px; margin-top: 4px; font-style: italic; }}
+@keyframes swing {{ 0%, 100% {{ transform: rotate(-3deg); }} 50% {{ transform: rotate(3deg); }} }}
+@keyframes float {{ 0% {{ opacity: 0; transform: translate(0, 0); }} 30% {{ opacity: .9; }} 100% {{ opacity: 0; transform: translate(14px, -30px); }} }}
+@media (prefers-reduced-motion: reduce) {{ .sloth .swing, .sloth .z {{ animation: none; opacity: .8; }} }}
 code {{ font: 13px ui-monospace, SFMono-Regular, Menlo, monospace; padding: 1px 6px; border-radius: 6px; background: rgba(255,255,255,.1); }}
 footer {{ margin-top: 26px; text-align: center; color: var(--muted); font-size: 13px; }}
 footer span {{ color: var(--cyan); }}
@@ -220,7 +267,7 @@ footer span {{ color: var(--cyan); }}
     <div class="eyebrow">{inline(hero_title)}</div>
     {block_html(hero_lines)}
   </section>
-  <div class="grid">{cards}</div>
+  <div class="grid">{cards}{SLOTH}</div>
   <footer>Written overnight by <span>{html.escape(MODEL)}</span> on this Mac · 0 bytes sent anywhere</footer>
 </main></body></html>
 """
