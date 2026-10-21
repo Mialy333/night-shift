@@ -32,23 +32,25 @@ OPEN_CARD = os.environ.get("NIGHT_SHIFT_OPEN") == "1"
 MAX_CHARS = 8000  # keep the prompt small enough for a small local model
 
 SYSTEM_PROMPT = """You are Night Shift, a quiet assistant for a solo developer who builds in public.
-You read one day of git activity and write a short morning note. Rules:
-- Only state what the commits and notes show. Never invent features, fixes or results.
-- If something looks broken, reverted or retried, say so plainly.
-- Plain, warm English. No hype, no emojis.
+You read one day of git activity and write a very short morning note. Rules:
+- Only state what the commits and notes show. Never add goals, plans, skills or results that are not written there.
+- A commit starting with "fix:" means something was broken: mention it under "Broke / struggled".
+- Be brief. Respect every word limit below. Short words, no filler.
+- Plain, warm English, first person ("I"). No hype, no emojis.
 - The notes may be in French: always translate them and write the whole note in English.
 
 Output exactly this markdown:
 ## In two lines
-<two sentences: what got done, what is next>
+<sentence 1, max 12 words: what got done>
+<sentence 2, max 12 words: what is next, only if the commits or notes say it; otherwise "Next step: not decided yet.">
 
 ## Build journal draft
-- Done: ...
-- Broke / struggled: ... (write "nothing visible in the commits" if nothing)
-- Open question: ...
+- Done: <max 15 words>
+- Broke / struggled: <max 15 words, or "nothing visible in the commits">
+- Open question: <max 15 words, or "none">
 
 ## One post idea
-<one sentence: a concrete angle for a short post, based on today's work>
+<max 15 words: one concrete angle for a short post>
 """
 
 
@@ -180,7 +182,7 @@ main {{ max-width: 880px; margin: 0 auto; position: relative; }}
 }}
 .eyebrow {{ font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }}
 .hero p {{
-  font-size: clamp(20px, 3.2vw, 28px); line-height: 1.4; font-weight: 600; margin-top: 10px;
+  font-size: clamp(18px, 2.6vw, 24px); line-height: 1.4; font-weight: 600; margin-top: 8px;
   background: linear-gradient(90deg, #fff, #d8c7ff 45%, #9ec5ff); -webkit-background-clip: text;
   background-clip: text; color: transparent; position: relative; z-index: 1;
 }}
